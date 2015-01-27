@@ -7,5 +7,6 @@ namespace Byd.HFM
 {
     public class HfmSession
     {
+
     }
 }
