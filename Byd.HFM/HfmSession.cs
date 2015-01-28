@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using HFMWAPPLICATIONSLib;
 using HFMWSESSIONLib;
-using HFMWSYSTEMINFOLib;
 using HSVSESSIONLib;
-using HSVSYSTEMINFOLib;
 using HSXCLIENTLib;
 
 namespace Byd.HFM
@@ -86,5 +81,12 @@ namespace Byd.HFM
             }
             return hfmwSession;
         }
+
+        public HfmDimension CreateDimension()
+        {
+            HfmDimension hfmDimension = new HfmDimension(_HsvSession, _HFMwSession);
+            return hfmDimension;
+        }
+
     }
 }

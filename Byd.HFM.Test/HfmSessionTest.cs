@@ -12,7 +12,7 @@ namespace Byd.HFM.Test
         [SetUp()]
         public void SetUp()
         {
-            
+
         }
 
         [TearDown()]
@@ -23,12 +23,15 @@ namespace Byd.HFM.Test
         [Test()]
         public void TestConnect()
         {
-            bool connected = HfmSession.TestConnect("", "admin", "weilai#00", "192.168.192.188", "Financial Management", "GLPCON");
-            Assert.AreEqual(connected,true);
+            bool connected = HfmSession.TestConnect("", "admin", "weilai#00", "192.168.192.188", "Financial Management",
+                "GLPCON");
+            Assert.AreEqual(connected, true);
 
-            connected = HfmSession.TestConnect("", "admin", "error password", "192.168.192.188", "Financial Management", "GLPCON");
+            connected = HfmSession.TestConnect("", "admin", "error password", "192.168.192.188", "Financial Management",
+                "GLPCON");
             Assert.AreEqual(connected, false);
-         }
+        }
+
 
 
     }
