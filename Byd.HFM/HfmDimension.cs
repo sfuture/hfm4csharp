@@ -25,6 +25,11 @@ namespace Byd.HFM
             _HFMwSession = argHFMwSession;
             init();
         }
+        public HfmSession HfmSession
+        {
+            get;
+            set;
+        }
 
         private void init()
         {
@@ -87,7 +92,26 @@ namespace Byd.HFM
             }
         }
 
-
+        public int GetDefaultParentID(String argEntity)
+        {
+            try
+            {
+                if (!HfmDimension.memberIdDictionary[HfmDimensionType.Parent].ContainsKey(argEntity))
+                {
+                    int entityId = GetMemberID(HfmDimensionType.Entity, argEntity);
+                    HFMwMetadata hfmwMetadata = _HFMwSession.metadata as HFMwMetadata;
+                    HFMwEntities hfmwEntities = hfmwMetadata.entities as HFMwEntities;
+                    HFMwDimension hfmwDimension = hfmwEntities.dimension as HFMwDimension;
+                    int parentEntityId = hfmwDimension.GetDefaultParent(entityId);
+                    memberIdDictionary[HfmDimensionType.Parent].Add(argEntity, parentEntityId);
+                }
+                return memberIdDictionary[HfmDimensionType.Parent][argEntity];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(HfmCommon.GetHfmErrorMessage(ex.Message));
+            }
+        }
         public List<DimensionMember> EnumMembers2(HfmDimensionType argDimensionType)
         {
             return EnumMembers2(argDimensionType, "[Hierarchy]");

@@ -82,11 +82,24 @@ namespace Byd.HFM
             return hfmwSession;
         }
 
-        public HfmDimension CreateDimension()
+        private HfmDimension _HfmDimension = null;
+        public HfmDimension GetDimension()
         {
-            HfmDimension hfmDimension = new HfmDimension(_HsvSession, _HFMwSession);
-            return hfmDimension;
+            if (_HfmDimension == null)
+            {
+                _HfmDimension = new HfmDimension(_HsvSession, _HFMwSession) { HfmSession = this };
+            }
+            return _HfmDimension;
         }
 
+        private HfmData _HfmData = null;
+        public HfmData GetData()
+        {
+            if (_HfmData == null)
+            {
+                _HfmData = new HfmData(_HsvSession, _HFMwSession){HfmSession = this};
+            }
+            return _HfmData;
+        }
     }
 }

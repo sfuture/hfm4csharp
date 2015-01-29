@@ -41,11 +41,13 @@
   <ItemGroup>
     <Compile Include="DComHelper.cs" />
     <Compile Include="HfmCommon.cs" />
+    <Compile Include="HfmData.cs" />
     <Compile Include="HfmDimension.cs" />
     <Compile Include="HfmDimensionTypeHelper.cs" />
     <Compile Include="HfmSession.cs" />
     <Compile Include="Model\DimensionModel.cs" />
     <Compile Include="Model\DimensionMember.cs" />
+    <Compile Include="Model\DimensionTreeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeDefine.cs" />
   </ItemGroup>

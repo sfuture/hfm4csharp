@@ -25,7 +25,7 @@ namespace Byd.HFM.Test
         public void TestEnumMembers2()
         {
             HfmSession hfmSession = HfmSession.CreateSession("", "admin", "weilai#00", "192.168.192.188", "Financial Management","GLPCON");
-            HfmDimension hfmDimension = hfmSession.CreateDimension();
+            HfmDimension hfmDimension = hfmSession.GetDimension();
             var ret = hfmDimension.EnumMembers2(HfmDimensionType.Account);
             Assert.Less(0, ret.Count());
             ret = hfmDimension.EnumMembers2(HfmDimensionType.Scenario);
@@ -57,7 +57,7 @@ namespace Byd.HFM.Test
         public void TestGetMember()
         {
             HfmSession hfmSession = HfmSession.CreateSession("", "admin", "weilai#00", "192.168.192.188", "Financial Management", "GLPCON");
-            HfmDimension hfmDimension = hfmSession.CreateDimension();
+            HfmDimension hfmDimension = hfmSession.GetDimension();
             var ret = hfmDimension.EnumMembers2(HfmDimensionType.Account);
             for (int index = 0; index < ret.Count && index < 20; index++)
             {
