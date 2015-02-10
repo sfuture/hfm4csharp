@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Byd.HFM.Model;
 using HFMCONSTANTSLib;
 using HFMWMETADATALib;
@@ -42,7 +40,6 @@ namespace Byd.HFM
 
                 }
             }
-
             if (HfmDimension.memberLabelDictionary == null)
             {
                 HfmDimension.memberLabelDictionary = new Dictionary<HfmDimensionType,Dictionary<int, string>>();
@@ -156,6 +153,185 @@ namespace Byd.HFM
             return retList;
         }
 
+        public List<DimensionMember> EnumEntityMembers()
+        {
+            List<DimensionMember> memberList = EnumMembers2(HfmDimensionType.Entity);
+            var hsvMetadata = _HsvSession.Metadata as IHsvMetadata;
+            var hsvEntities = hsvMetadata.Entities as IHsvEntities;
+            bool boolOutValue;
+            int intOutValue;
+            string strOutValue;
+            foreach (var member in memberList)
+            {
+
+                hsvEntities.GetDefaultValueID(member.MemberID, out intOutValue);
+                var hsvTreeInfo = hsvMetadata.Values as IHsvTreeInfo;
+                hsvTreeInfo.GetLabel(intOutValue, out strOutValue);
+                member.DefCurrency = strOutValue;
+
+
+                hsvEntities.GetAllowAdjustments(member.MemberID, out boolOutValue);
+                member.AllowAdjs = boolOutValue;
+
+                hsvEntities.GetAllowAdjustmentsFromChildren(member.MemberID, out boolOutValue);
+                member.AllowAdjFromChildren = boolOutValue;
+
+                hsvEntities.IsICP(member.MemberID, out boolOutValue);
+                member.IsICP = boolOutValue;
+
+                hsvEntities.GetHoldingCompany(member.MemberID, out intOutValue);
+                //hsvTreeInfo.GetLabel(intOutValue, out strOutValue);
+                member.HoldingCompany = GetMemberLabel(HfmDimensionType.Entity, intOutValue); 
+
+                hsvEntities.GetSecurityAsPartnerID(member.MemberID, out intOutValue);
+                member.SecurityAsPartner = intOutValue;
+
+                hsvEntities.GetUserDefined1(member.MemberID, out strOutValue);
+                member.UserDefined1 = strOutValue;
+
+                hsvEntities.GetUserDefined2(member.MemberID, out strOutValue);
+                member.UserDefined2 = strOutValue;
+
+                hsvEntities.GetUserDefined3(member.MemberID, out strOutValue);
+                member.UserDefined3 = strOutValue;
+
+                hsvEntities.GetSecurityClassID(member.MemberID, out intOutValue);
+                member.SecurityClass = intOutValue;
+            }
+            return memberList;
+        }
+
+        public List<DimensionMember> EnumAccountMembers()
+        {
+            List<DimensionMember> memberList = EnumMembers2(HfmDimensionType.Account);
+            try
+            {
+                var hsvMetadata = _HsvSession.Metadata as IHsvMetadata;
+                var hsvAccounts = hsvMetadata.Accounts as IHsvAccounts;
+                bool boolOutValue;
+                int intOutValue;
+                short shortOutValue;
+                string strOutValue;
+                foreach (var member in memberList)
+                {
+
+                    hsvAccounts.GetAccountType(member.MemberID, out shortOutValue);
+                    member.AccountType = shortOutValue;
+
+                    hsvAccounts.IsCalculated(member.MemberID, out boolOutValue);
+                    member.IsCalculated = boolOutValue;
+
+                    hsvAccounts.IsConsolidated(member.MemberID, out boolOutValue);
+                    member.IsConsolidated = boolOutValue;
+
+                    hsvAccounts.IsICP(member.MemberID, out boolOutValue);
+                    member.IsICP = boolOutValue;
+
+                    hsvAccounts.GetPlugAccount(member.MemberID, out intOutValue);
+                    member.PlugAcct = GetMemberLabel(HfmDimensionType.Account, intOutValue);
+
+                    hsvAccounts.GetTopMemberOfValidCustom1Hierarchy(member.MemberID, out intOutValue);
+                    member.Custom1TopMember = GetMemberLabel(HfmDimensionType.Custom1, intOutValue);
+
+                    hsvAccounts.GetTopMemberOfValidCustom2Hierarchy(member.MemberID, out intOutValue);
+                    member.Custom2TopMember = GetMemberLabel(HfmDimensionType.Custom2, intOutValue); ;
+
+                    hsvAccounts.GetTopMemberOfValidCustom3Hierarchy(member.MemberID, out intOutValue);
+                    member.Custom3TopMember = GetMemberLabel(HfmDimensionType.Custom3, intOutValue); ;
+
+                    hsvAccounts.GetTopMemberOfValidCustom4Hierarchy(member.MemberID, out intOutValue);
+                    member.Custom4TopMember = GetMemberLabel(HfmDimensionType.Custom4, intOutValue); ;
+
+                    hsvAccounts.GetNumDecimalPlaces(member.MemberID, out shortOutValue);
+                    member.NumDecimalPlaces = shortOutValue;
+
+                    hsvAccounts.UsesLineItems(member.MemberID, out boolOutValue);
+                    member.UsesLineItems = boolOutValue;
+
+                    hsvAccounts.GetXBRLTags(member.MemberID, out strOutValue);
+                    member.XBRLTags = strOutValue;
+
+                    hsvAccounts.GetICPTopMember(member.MemberID, out intOutValue);
+                    member.ICPTopMember = GetMemberLabel(HfmDimensionType.Account, intOutValue);
+
+                    hsvAccounts.GetCalcAttribute(member.MemberID, out strOutValue);
+                    member.CalcAttribute = strOutValue;
+
+                    hsvAccounts.GetSubmissionGroup(member.MemberID, ref intOutValue);
+                    member.SubmissionGroup = intOutValue;
+
+                    hsvAccounts.GetUserDefined1(member.MemberID, out strOutValue);
+                    member.UserDefined1 = strOutValue;
+
+                    hsvAccounts.GetUserDefined2(member.MemberID, out strOutValue);
+                    member.UserDefined2 = strOutValue;
+
+                    hsvAccounts.GetUserDefined3(member.MemberID, out strOutValue);
+                    member.UserDefined3 = strOutValue;
+
+                    hsvAccounts.GetSecurityClassID(member.MemberID, out intOutValue);
+                    member.SecurityClass = intOutValue;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(HfmCommon.GetHfmErrorMessage(ex.Message));
+            }
+            return memberList;
+        }
+        public List<DimensionMember> EnumCustomMembers(HfmDimensionType argDimensionType)
+        {
+            if (argDimensionType != HfmDimensionType.Custom1 && argDimensionType != HfmDimensionType.Custom2 &&
+                argDimensionType != HfmDimensionType.Custom3 && argDimensionType != HfmDimensionType.Custom4)
+            {
+                return null;
+            }
+
+            List<DimensionMember> memberList = EnumMembers2(argDimensionType);
+            var hsvMetadata = _HsvSession.Metadata as IHsvMetadata;
+            IHsvCustom hsvCustom = null;
+            switch (argDimensionType)
+            {
+                case HfmDimensionType.Custom1:
+                    hsvCustom = hsvMetadata.Custom1 as IHsvCustom;
+                    break;
+                case HfmDimensionType.Custom2:
+                    hsvCustom = hsvMetadata.Custom2 as IHsvCustom;
+                    break;
+                case HfmDimensionType.Custom3:
+                    hsvCustom = hsvMetadata.Custom3 as IHsvCustom;
+                    break;
+                case HfmDimensionType.Custom4:
+                    hsvCustom = hsvMetadata.Custom4 as IHsvCustom;
+                    break;
+            }
+
+            bool boolOutValue;
+            int intOutValue;
+            short shortOutValue;
+            string strOutValue;
+
+            foreach (var member in memberList)
+            {
+                hsvCustom.IsSwitchSignEnabledForFlow(member.MemberID, out boolOutValue);
+                member.SwitchSignForFlow = boolOutValue;
+                hsvCustom.IsSwitchTypeEnabledForFlow(member.MemberID, out boolOutValue);
+                member.SwitchTypeForFlow = boolOutValue;
+                hsvCustom.GetUserDefined1(member.MemberID, out strOutValue);
+                member.UserDefined1 = strOutValue;
+                hsvCustom.GetUserDefined2(member.MemberID, out strOutValue);
+                member.UserDefined2 = strOutValue;
+                hsvCustom.GetUserDefined3(member.MemberID, out strOutValue);
+                member.UserDefined3 = strOutValue;
+                hsvCustom.GetSecurityClassID(member.MemberID, out intOutValue);
+                member.SecurityClass = intOutValue;
+            }
+
+            return memberList;
+
+        }
+
+
         public List<DimensionTreeModel> CreateTreeModel(HfmDimensionType argDimensionType)
         {
             List<DimensionTreeModel> treeModelList = new List<DimensionTreeModel>();
@@ -190,155 +366,8 @@ namespace Byd.HFM
             return treeModelList;
         }
 
-        //private void GetHFMEntityByMemberList(string pMemberListName)
-        //{
-        //    try
-        //    {
-        //        _HFMwSession.descriptionLanguage = 0;
-        //        _HFMwSession.ApplyUserSettings(true);
-        //        object lCount = null,
-        //            valMemberIDs = null,
-        //            valParentIDs = null,
-        //            vaMemberLabels = null,
-        //            vaDescriptions = null,
-        //            valNumChildren = null,
-        //            lTotalMembersInEnum = null;
-        //        lCount =
-        //            ((HFMwDimension) ((HFMwEntities) _HFMwSession.metadata.entities).dimension).EnumMembers2(
-        //                tagPOVDEFAULTS.MEMBERNOTUSED, tagPOVDEFAULTS.MEMBERNOTUSED, tagPOVDEFAULTS.MEMBERNOTUSED,
-        //                tagPOVDEFAULTS.MEMBERNOTUSED, pMemberListName, "", 0, 0,
-        //                Convert.ToInt32(tagWEBOM_METADATA_INFO_FLAGS.WEBOM_METADATA_INFO_ALL),
-        //                ref valMemberIDs, ref valParentIDs, ref vaMemberLabels, ref vaDescriptions, ref valNumChildren,
-        //                ref lTotalMembersInEnum);
 
-        //        int total = (int) lTotalMembersInEnum;
-        //        object[] oMemberIDs = (object[]) valMemberIDs,
-        //            oParentIDs = (object[]) valParentIDs,
-        //            oMemberLabels = (object[]) vaMemberLabels,
-        //            oDescriptions = (object[]) vaDescriptions;
 
-        //        if (!oDimensionLabels.ContainsKey((int) tagHFMDIMENSIONS.DIMENSIONENTITY))
-        //        {
-        //            oDimensionLabels.Add((int) tagHFMDIMENSIONS.DIMENSIONENTITY, new Dictionary<int, ITEM_INFO>());
-        //            oDimensionItemIds.Add((int) tagHFMDIMENSIONS.DIMENSIONENTITY, new Dictionary<string, ITEM_INFO>());
-        //        }
-        //        string[] labels;
-        //        Dictionary<int, ITEM_INFO> temp = oDimensionLabels[(int) tagHFMDIMENSIONS.DIMENSIONENTITY];
-        //        Dictionary<string, ITEM_INFO> temp2 = oDimensionItemIds[(int) tagHFMDIMENSIONS.DIMENSIONENTITY];
-        //        for (int i = 0; i < total; i++)
-        //        {
-        //            if (!temp.ContainsKey((int) oMemberIDs[i]))
-        //            {
-        //                labels = ((string) oMemberLabels[i]).Split('.');
-        //                ITEM_INFO item = new ITEM_INFO();
-        //                item.ItemId = (int) oMemberIDs[i];
-        //                item.Label = labels[labels.Length - 1];
-        //                item.Description = (string) oDescriptions[i];
 
-        //                temp.Add((int) oMemberIDs[i], item);
-        //                temp2.Add(item.Label, item);
-        //            }
-        //        }
-
-        //        _HFMwSession.descriptionLanguage = 1;
-        //        _HFMwSession.ApplyUserSettings(true);
-        //        oDescriptions = (object[]) vaDescriptions;
-        //        lCount =
-        //            ((HFMwDimension) ((HFMwEntities) iHFMwMetadata.entities).dimension).EnumMembers2(
-        //                tagPOVDEFAULTS.MEMBERNOTUSED, tagPOVDEFAULTS.MEMBERNOTUSED, tagPOVDEFAULTS.MEMBERNOTUSED,
-        //                tagPOVDEFAULTS.MEMBERNOTUSED, pMemberListName, "", 0, 0,
-        //                Convert.ToInt32(tagWEBOM_METADATA_INFO_FLAGS.WEBOM_METADATA_INFO_ALL),
-        //                ref valMemberIDs, ref valParentIDs, ref vaMemberLabels, ref vaDescriptions, ref valNumChildren,
-        //                ref lTotalMembersInEnum);
-        //        for (int i = 0; i < total; i++)
-        //        {
-        //            temp[(int) oMemberIDs[i]].Description1 = (string) oDescriptions[i];
-        //        }
-
-        //        iHFMwSession.descriptionLanguage = 2;
-        //        iHFMwSession.ApplyUserSettings(true);
-        //        oDescriptions = (object[]) vaDescriptions;
-        //        lCount =
-        //            ((HFMwDimension) ((HFMwEntities) iHFMwMetadata.entities).dimension).EnumMembers2(
-        //                tagPOVDEFAULTS.MEMBERNOTUSED, tagPOVDEFAULTS.MEMBERNOTUSED, tagPOVDEFAULTS.MEMBERNOTUSED,
-        //                tagPOVDEFAULTS.MEMBERNOTUSED, pMemberListName, "", 0, 0,
-        //                Convert.ToInt32(tagWEBOM_METADATA_INFO_FLAGS.WEBOM_METADATA_INFO_ALL),
-        //                ref valMemberIDs, ref valParentIDs, ref vaMemberLabels, ref vaDescriptions, ref valNumChildren,
-        //                ref lTotalMembersInEnum);
-        //        for (int i = 0; i < total; i++)
-        //        {
-        //            temp[(int) oMemberIDs[i]].Description2 = (string) oDescriptions[i];
-        //        }
-
-        //        iHFMwSession.descriptionLanguage = 0;
-        //        iHFMwSession.ApplyUserSettings(true);
-
-        //        int plValueID, plHoldingCompanyEntityID, plSecurityAsPartnerID, plSecurityClassID;
-        //        bool pbOK, pbIsICP;
-        //        string pbstrLabel, pbstrUserDefined;
-        //        HsvEntities iHsvEntities = (HsvEntities) iHsvMetadata.Entities;
-        //        foreach (int key in temp.Keys)
-        //        {
-        //            DIMENSION_PROPERY_ITEMS dimension_propery_items = new DIMENSION_PROPERY_ITEMS();
-        //            ITEM_INFO item_info = temp[key];
-        //            dimension_propery_items.Type = "Entity";
-        //            dimension_propery_items.Code = item_info.Label;
-        //            dimension_propery_items.DefaultParent = GetDefaultParentLabel(dimension_propery_items.Code);
-        //            dimension_propery_items.CodeName = item_info.Description;
-        //            dimension_propery_items.CodeName1 = item_info.Description1;
-        //            dimension_propery_items.CodeName2 = item_info.Description2;
-        //            iHsvEntities.GetDefaultValueID(key, out plValueID);
-        //            iTreeInfo = iHsvMetadata.Values;
-        //            iTreeInfo.GetLabel(plValueID, out pbstrLabel);
-        //            dimension_propery_items.DefCurrency = pbstrLabel;
-        //            iHsvEntities.GetAllowAdjustments(key, out pbOK);
-        //            dimension_propery_items.AllowAdjs = pbOK;
-        //            iHsvEntities.GetAllowAdjustmentsFromChildren(key, out pbOK);
-        //            dimension_propery_items.AllowAdjFromChildren = pbOK;
-        //            iHsvEntities.IsICP(key, out pbIsICP);
-        //            dimension_propery_items.IsICP = pbIsICP;
-        //            iHsvEntities.GetHoldingCompany(key, out plHoldingCompanyEntityID);
-        //            iTreeInfo = iHsvMetadata.Entities;
-        //            iTreeInfo.GetLabel(plHoldingCompanyEntityID, out pbstrLabel);
-        //            dimension_propery_items.HoldingCompany = pbstrLabel;
-        //            iHsvEntities.GetSecurityAsPartnerID(key, out plSecurityAsPartnerID);
-        //            dimension_propery_items.SecurityAsPartner = plSecurityAsPartnerID;
-        //            iHsvEntities.GetUserDefined1(key, out pbstrUserDefined);
-        //            dimension_propery_items.UserDefined1 = pbstrUserDefined;
-        //            iHsvEntities.GetUserDefined2(key, out pbstrUserDefined);
-        //            dimension_propery_items.UserDefined2 = pbstrUserDefined;
-        //            iHsvEntities.GetUserDefined3(key, out pbstrUserDefined);
-        //            dimension_propery_items.UserDefined3 = pbstrUserDefined;
-        //            iHsvEntities.GetSecurityClassID(key, out plSecurityClassID);
-        //            dimension_propery_items.SecurityClass = plSecurityClassID;
-        //            oDimensionProperyItems.Add(dimension_propery_items);
-        //        }
-
-        //        //Tree Data
-        //        int order = 0;
-        //        for (int i = 0; i < total; i++)
-        //        {
-        //            DIMENSION_TREE_DATA dimension_tree_data = new DIMENSION_TREE_DATA();
-        //            labels = ((string) oMemberLabels[i]).Split('.');
-        //            dimension_tree_data.Type = "Entity";
-        //            if ((int) oParentIDs[i] == -1)
-        //            {
-        //                dimension_tree_data.ParentCode = "ROOT";
-        //                dimension_tree_data.Code = labels[0];
-        //            }
-        //            else
-        //            {
-        //                dimension_tree_data.ParentCode = labels[0];
-        //                dimension_tree_data.Code = labels[1];
-        //            }
-        //            dimension_tree_data.Order = ++order;
-        //            oDimensionTreeData.Add(dimension_tree_data);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
     }
 }

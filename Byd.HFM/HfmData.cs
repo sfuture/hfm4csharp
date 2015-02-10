@@ -236,9 +236,7 @@ namespace Byd.HFM
             List<HfmDimensionType> emptyMemberList = GetEmptyMembers(argDataRow);
             if (emptyMemberList.Count == 0)
             {
-                DataRow newRow = retDataTable.NewRow();
-                Array.Copy(newRow.ItemArray, argDataRow.ItemArray, argDataRow.ItemArray.Length);
-                retDataTable.Rows.Add(newRow);
+                retDataTable.ImportRow(argDataRow);
                 return retDataTable;
             }
 
@@ -249,14 +247,13 @@ namespace Byd.HFM
             foreach (int memberId in memberIds)
             {
                 string label = HfmSession.GetDimension().GetMemberLabel(emptyMember, memberId);
-                if (label == "[ICP None]" || label == "[None]")
-                {
-                    continue;
-                }
-                DataRow newRow = argTempTable.NewRow();
-                Array.Copy(newRow.ItemArray, argDataRow.ItemArray, argDataRow.ItemArray.Length);
-                newRow[emptyMemberFieldName] = label;
-                argTempTable.Rows.Add(newRow);
+                //if (label == "[ICP None]" || label == "[None]")
+                //{
+                //    continue;
+                //}
+
+                argTempTable.ImportRow(argDataRow);
+                argTempTable.Rows[argTempTable.Rows.Count-1][emptyMemberFieldName] = label;
             }
             if (emptyMemberList.Count == 1)
             {

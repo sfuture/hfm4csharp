@@ -24,7 +24,7 @@ namespace Byd.HFM.Test
         [Test()]
         public void TestEnumMembers2()
         {
-            HfmSession hfmSession = HfmSession.CreateSession("", "admin", "weilai#00", "192.168.192.188", "Financial Management","GLPCON");
+            HfmSession hfmSession = HfmHelper.CreateHfmSession();
             HfmDimension hfmDimension = hfmSession.GetDimension();
             var ret = hfmDimension.EnumMembers2(HfmDimensionType.Account);
             Assert.Less(0, ret.Count());
@@ -56,7 +56,7 @@ namespace Byd.HFM.Test
         [Test()]
         public void TestGetMember()
         {
-            HfmSession hfmSession = HfmSession.CreateSession("", "admin", "weilai#00", "192.168.192.188", "Financial Management", "GLPCON");
+            HfmSession hfmSession = HfmHelper.CreateHfmSession();
             HfmDimension hfmDimension = hfmSession.GetDimension();
             var ret = hfmDimension.EnumMembers2(HfmDimensionType.Account);
             for (int index = 0; index < ret.Count && index < 20; index++)
@@ -66,8 +66,36 @@ namespace Byd.HFM.Test
                 Assert.AreEqual(id, member.MemberID);
                 string label = hfmDimension.GetMemberLabel(HfmDimensionType.Account, member.MemberID);
                 Assert.AreEqual(label, member.MemberLabel);
-
             }
+        }
+
+        [Test()]
+        public void TestEnumEntityMembers()
+        {
+            HfmSession hfmSession = HfmHelper.CreateHfmSession();
+            HfmDimension hfmDimension = hfmSession.GetDimension();
+            var ret = hfmDimension.EnumEntityMembers();
+            var retv = ret.FirstOrDefault(c => c.Description == "GLP Wuxi Logistics Development Co.Ltd.");
+
+        }
+
+        [Test()]
+        public void TestEnumAccountMembers()
+        {
+            HfmSession hfmSession = HfmHelper.CreateHfmSession();
+            HfmDimension hfmDimension = hfmSession.GetDimension();
+            var ret = hfmDimension.EnumAccountMembers();
+            var retv = ret.FirstOrDefault(c => c.Description == "HisRate_Acquisition");
+
+        }
+
+        [Test()]
+        public void TestEnumCustomMembers()
+        {
+            HfmSession hfmSession = HfmHelper.CreateHfmSession();
+            HfmDimension hfmDimension = hfmSession.GetDimension();
+            var ret = hfmDimension.EnumCustomMembers(HfmDimensionType.Custom2);
+            var retv = ret.FirstOrDefault(c => c.Description == "TOPC2");
 
         }
     }

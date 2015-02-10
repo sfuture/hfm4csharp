@@ -45,7 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HfmDataTest.cs" />
     <Compile Include="HfmDimensionTest.cs" />
+    <Compile Include="HfmHelper.cs" />
     <Compile Include="HfmSessionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
