@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Security;
-using System.Text;
 using HFMCONSTANTSLib;
 using HFMWSESSIONLib;
 using HSVSESSIONLib;
@@ -92,9 +89,9 @@ namespace Byd.HFM
                     varalScenario[i] = MemberLabel2Id(HfmDimensionType.Scenario, dataRow);
                     varalYear[i] = MemberLabel2Id(HfmDimensionType.Year, dataRow);
                     varalPeriod[i] = MemberLabel2Id(HfmDimensionType.Period, dataRow);
-                    varalView[i] = MemberLabel2Id(HfmDimensionType.View, dataRow); ;
-                    varalEntity[i] = MemberLabel2Id(HfmDimensionType.Entity, dataRow); ;
-                    //varalParent[i] = MemberLabel2Id(HfmDimensionType.Parent, dataRow); ;
+                    varalView[i] = MemberLabel2Id(HfmDimensionType.View, dataRow); 
+                    varalEntity[i] = MemberLabel2Id(HfmDimensionType.Entity, dataRow); 
+                    //varalParent[i] = MemberLabel2Id(HfmDimensionType.Parent, dataRow);
                     varalValue[i] = MemberLabel2Id(HfmDimensionType.Value, dataRow);
                     varalAccount[i] = MemberLabel2Id(HfmDimensionType.Account, dataRow);
                     varalICP[i] = MemberLabel2Id(HfmDimensionType.Icp, dataRow);
@@ -131,7 +128,7 @@ namespace Byd.HFM
                 }
             }
             catch (Exception ex)
-            {   //-2147220984   Error occurred while writing cube data.
+            {   
                 throw new Exception(HfmCommon.GetHfmErrorMessage(ex.Message));
             }
         }
@@ -212,7 +209,7 @@ namespace Byd.HFM
             }
             catch (Exception ex)
             {
-                //-2147220975   Error occurred while accessing the safe array.
+                
                 throw new Exception(HfmCommon.GetHfmErrorMessage(ex.Message));
             }
         }
@@ -279,7 +276,6 @@ namespace Byd.HFM
                     emptyMemberList.Add(dimensionType);
                 }
             }
-
             return emptyMemberList;
         }
 

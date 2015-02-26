@@ -65,8 +65,6 @@ namespace Byd.HFM.Test
 
             var retTable = data.ExpandData(tesTable);
 
-
-
         }
 
         private DataTable CreateDataTable()

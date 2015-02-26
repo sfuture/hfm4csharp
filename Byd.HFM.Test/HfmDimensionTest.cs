@@ -1,4 +1,8 @@
-﻿using Byd.HFM.Model;
+﻿using System.IO;
+using System.Xml.Serialization;
+using Byd.HFM.Model;
+using Byd.HFM.XML;
+using Byd.HFM.XML.MATE;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -96,6 +100,29 @@ namespace Byd.HFM.Test
             HfmDimension hfmDimension = hfmSession.GetDimension();
             var ret = hfmDimension.EnumCustomMembers(HfmDimensionType.Custom2);
             var retv = ret.FirstOrDefault(c => c.Description == "TOPC2");
+
+        }
+
+        [Test()]
+        public void TestExtract()
+        {
+            XmlSerializer ser = new XmlSerializer(typeof(HSMETADATA), new XmlRootAttribute("HSMETADATA"));
+
+            HfmSession hfmSession = HfmHelper.CreateHfmSession();
+            HfmDimension hfmDimension = hfmSession.GetDimension();
+            string filePath = Path.GetTempFileName();
+            string logPath = Path.GetTempFileName();
+            hfmDimension.Extract(filePath, logPath);
+
+
+
+            HSMETADATA data;
+            using (FileStream stream = new FileStream(filePath, FileMode.Open))
+            {
+                data = (HSMETADATA)ser.Deserialize(stream);
+                stream.Close();
+            }
+            Assert.AreEqual(data.DIMENSION.Length, 7);
 
         }
     }

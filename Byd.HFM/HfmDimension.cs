@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Byd.HFM.Model;
 using HFMCONSTANTSLib;
 using HFMWMETADATALib;
 using HFMWSESSIONLib;
 using HSVMETADATALib;
+using HSVMETADATALOADACVLib;
 using HSVSESSIONLib;
 
 namespace Byd.HFM
@@ -37,7 +39,6 @@ namespace Byd.HFM
                 foreach (HfmDimensionType hfmDimensionType in Enum.GetValues(typeof(HfmDimensionType)))
                 {
                     memberIdDictionary[hfmDimensionType] = new Dictionary<string, int>();
-
                 }
             }
             if (HfmDimension.memberLabelDictionary == null)
@@ -116,8 +117,6 @@ namespace Byd.HFM
 
         public List<DimensionMember> EnumMembers2(HfmDimensionType argDimensionType,string argMemberListName)
         {
-            //_HFMwSession.descriptionLanguage = 0;
-            //_HFMwSession.ApplyUserSettings(true);
             object count = null,
                 varMemberIDs = null,
                 varParentIDs = null,
@@ -367,7 +366,19 @@ namespace Byd.HFM
         }
 
 
+        public void Extract(string argExtractFilePath, string argExtractLogPath)
+        {
+            HsvMetadataLoadACV hsvMetadataLoadACV = new HsvMetadataLoadACV();
+            hsvMetadataLoadACV.SetSession(_HsvSession);
+            IHsvLoadExtractOptions options = hsvMetadataLoadACV.ExtractOptions;
+            IHsvLoadExtractOption option = options.Item[HSV_METADATAEXTRACT_OPTION.HSV_METAEXTRACT_OPT_ACCOUNTS_SYSTEM];
+            option.CurrentValue = false;
 
+            option = options.Item[HSV_METADATAEXTRACT_OPTION.HSV_METAEXTRACT_OPT_FILE_FORMAT];
+            option.CurrentValue = HSV_METALOADEX_FILE_FORMAT.HSV_METALOADEX_FORMAT_XML;
+
+            hsvMetadataLoadACV.Extract(argExtractFilePath, argExtractLogPath);
+        }
 
     }
 }
